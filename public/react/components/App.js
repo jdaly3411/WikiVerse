@@ -1,31 +1,34 @@
-import React, { useEffect, useState } from 'react'
-import { PagesList } from './PagesList'
+import React, { useEffect, useState } from "react";
+import { PagesList } from "./PagesList";
 
 // import and prepend the api url to any fetch calls
-import apiURL from '../api'
+import apiURL from "../api";
 
 export const App = () => {
-  const [pages, setPages] = useState([])
+  const [pages, setPages] = useState([]);
+  const [articles, setArticles] = useState([]); // Stores all articles
+  const [currentArticle, setCurrentArticle] = useState(null); // For single article view
+  const [isAddingArticle, setIsAddingArticle] = useState(false); // Controls form display
 
   useEffect(() => {
-    async function fetchPages () {
+    async function fetchPages() {
       try {
-        const response = await fetch(`${apiURL}/wiki`)
-        const pagesData = await response.json()
-        setPages(pagesData)
+        const response = await fetch(`${apiURL}/wiki`);
+        const pagesData = await response.json();
+        setPages(pagesData);
       } catch (err) {
-        console.log('Oh no an error! ', err)
+        console.log("Oh no an error! ", err);
       }
     }
 
-    fetchPages()
-  }, [])
+    fetchPages();
+  }, []);
 
   return (
-		<main>
+    <main>
       <h1>WikiVerse</h1>
-			<h2>An interesting 📚</h2>
-			<PagesList pages={pages} />
-		</main>
-  )
-}
+      <h2>An interesting 📚</h2>
+      <PagesList pages={pages} />
+    </main>
+  );
+};
