@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PagesList } from "./PagesList";
+import { Page } from "./Page";
 
 // import and prepend the api url to any fetch calls
 import apiURL from "../api";
@@ -14,7 +15,7 @@ export const App = () => {
     // Fetch all the pages when the app loads
     async function fetchPages() {
       try {
-        const response = await fetch(`${apiURL}/wiki`);
+        const response = await fetch(`${apiURL}/wiki/`);
         const pagesData = await response.json();
         setPages(pagesData);
       } catch (err) {
@@ -44,9 +45,9 @@ export const App = () => {
               tags: formData.get("tags"),
             };
             try {
-              const response = await fetch("/api/wiki", {
+              const response = await fetch(`${apiURL}/wiki`, {
                 method: "POST",
-                headers: { "Content-Type": "application.json" },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newPage),
               });
               if (!response.ok) throw new Error("Failed to add page");
