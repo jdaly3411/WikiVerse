@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { PagesList } from "./PagesList";
-import { Page } from "./Page";
+import { PagesList } from "./PagesList"; // List of pages
+import { Page } from "./Page"; // Individual page details view
 
-// import and prepend the api url to any fetch calls
+// import and prepend the api URL to any fetch calls
 import apiURL from "../api";
-import { title } from "process";
 
 export const App = () => {
   const [pages, setPages] = useState([]);
@@ -15,7 +14,7 @@ export const App = () => {
     // Fetch all the pages when the app loads
     async function fetchPages() {
       try {
-        const response = await fetch(`${apiURL}/wiki/`);
+        const response = await fetch(`http://localhost:3000/api/wiki`);
         const pagesData = await response.json();
         setPages(pagesData);
       } catch (err) {
@@ -25,6 +24,26 @@ export const App = () => {
 
     fetchPages();
   }, []);
+
+  const handleDelete = async (slug) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/wiki/${slug}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Page failed to delete!");
+      }
+
+      const data = await response.json();
+      console.log("Page deleted", data);
+
+      // Remove page from the state after deletion
+      setPages((prevPages) => prevPages.filter((page) => page.slug !== slug));
+    } catch (error) {
+      console.error("Error deleting page:", error);
+    }
+  };
 
   if (isAddingPage) {
     return (
@@ -75,14 +94,21 @@ export const App = () => {
       </div>
     );
   }
+
   if (currentPage) {
     return <Page page={currentPage} setCurrentPage={setCurrentPage} />;
   }
+
   return (
     <div>
       <button onClick={() => setIsAddingPage(true)}>Add New Page</button>
-      <PagesList pages={pages} setCurrentPage={setCurrentPage} />
+      <PagesList
+        pages={pages}
+        setCurrentPage={setCurrentPage}
+        handleDelete={handleDelete}
+      />
     </div>
   );
 };
+
 export default App;

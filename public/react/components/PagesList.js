@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Page } from "./Page";
 import apiURL from "../api";
 
-export const PagesList = ({ pages, setCurrentPage }) => {
+export const PagesList = ({ pages, setCurrentPage, handleDelete }) => {
   const [loading, setLoading] = useState(false);
 
   const handlePageClick = async (slug) => {
@@ -24,7 +24,7 @@ export const PagesList = ({ pages, setCurrentPage }) => {
 
   return (
     <div>
-      <h1>All pages</h1>
+      <h1>All Pages</h1>
       {loading && <p>Loading...</p>}
       <ul>
         {pages.map((page) => (
@@ -32,6 +32,8 @@ export const PagesList = ({ pages, setCurrentPage }) => {
             <button onClick={() => handlePageClick(page.slug)}>
               {page.title}
             </button>
+            {/* Delete button next to each page */}
+            <button onClick={() => handleDelete(page.slug)}>Delete</button>
           </li>
         ))}
       </ul>
